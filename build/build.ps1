@@ -17,3 +17,5 @@ foreach ($module in $requiredModules) {
 
 # Process Function Module
 Copy-Item -Path "$workingDirectory/AutoBeerPS" -Destination "$($buildFolder.FullName)/modules" -Force -Recurse
+
+Get-ChildItem $buildFolder
