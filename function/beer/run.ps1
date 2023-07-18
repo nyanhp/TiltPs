@@ -1,6 +1,5 @@
-﻿using module AutoBeerPS
-param($Request, $TriggerMetadata)
-$endpoint = '/beer'
+﻿param($Request, $TriggerMetadata)
+$endpoint = '/api/beer'
 
 Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
     <##>
@@ -22,72 +21,18 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
         Write-PodeJsonResponse -Value $measurements
     }
 
+    Add-PodeRoute -Method Get -Path "$($endpoint)/:id" -ScriptBlock {
+        $measurements = Get-Beer -BeerId $WebEvent.Parameters['id']
+
+        Write-PodeJsonResponse -Value $measurements
+    }
+
     Add-PodeRoute -Method Post -Path $endpoint -ScriptBlock {
-        $apiKey = if ($WebEvent.Query['ApiKey'])
-        {
-            $WebEvent.Query['ApiKey']
-        }
-        elseif ($WebEvent.Data['ApiKey'])
-        {
-            $WebEvent.Data['ApiKey']
-        }
-
-        if (-not $apiKey)
-        {
-            Write-PodeTextResponse -Value "No ApiKey provided" -StatusCode 401
-            return
-        }
-
-        if ($apiKey -ne $env:ApiKey)
-        {
-            Write-PodeTextResponse -Value "Invalid ApiKey provided" -StatusCode 401
-            return
-        }
     }
 
     Add-PodeRoute -Method Put -Path $endpoint -ScriptBlock {
-        $apiKey = if ($WebEvent.Query['ApiKey'])
-        {
-            $WebEvent.Query['ApiKey']
-        }
-        elseif ($WebEvent.Data['ApiKey'])
-        {
-            $WebEvent.Data['ApiKey']
-        }
-
-        if (-not $apiKey)
-        {
-            Write-PodeTextResponse -Value "No ApiKey provided" -StatusCode 401
-            return
-        }
-
-        if ($apiKey -ne $env:ApiKey)
-        {
-            Write-PodeTextResponse -Value "Invalid ApiKey provided" -StatusCode 401
-            return
-        }
     }
 
     Add-PodeRoute -Method Delete -Path $endpoint -ScriptBlock {
-        $apiKey = if ($WebEvent.Query['ApiKey'])
-        {
-            $WebEvent.Query['ApiKey']
-        }
-        elseif ($WebEvent.Data['ApiKey'])
-        {
-            $WebEvent.Data['ApiKey']
-        }
-
-        if (-not $apiKey)
-        {
-            Write-PodeTextResponse -Value "No ApiKey provided" -StatusCode 401
-            return
-        }
-
-        if ($apiKey -ne $env:ApiKey)
-        {
-            Write-PodeTextResponse -Value "Invalid ApiKey provided" -StatusCode 401
-            return
-        }
     }
 }

@@ -1,13 +1,22 @@
 ﻿{
   "bindings": [
     {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "Request",
+      "route": "beer",
+      "methods": [
+        "get"
+      ]
+    },
+    {
       "authLevel": "function",
       "type": "httpTrigger",
       "direction": "in",
       "name": "Request",
-      "route": "beer/{id:int?}",
+      "route": "beer",
       "methods": [
-        "get",
         "post",
         "patch",
         "delete"

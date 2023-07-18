@@ -1,13 +1,22 @@
 ﻿{
   "bindings": [
     {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "Request",
+      "route": "measurement",
+      "methods": [
+        "get"
+      ]
+    },
+    {
       "authLevel": "function",
       "type": "httpTrigger",
       "direction": "in",
       "name": "Request",
-      "route": "measurement/{id:int?}",
+      "route": "measurement",
       "methods": [
-        "get",
         "post",
         "patch",
         "delete"

@@ -1,5 +1,5 @@
 ﻿param($Request, $TriggerMetadata)
-$endpoint = '/measurement'
+$endpoint = '/api/measurement'
 
 Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
     Import-PodeModule -Name AutoBeerPs
@@ -34,26 +34,6 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
     }
 
     Add-PodeRoute -Method Post -Path $endpoint -ScriptBlock {
-        $apiKey = if ($WebEvent.Query['ApiKey'])
-        {
-            $WebEvent.Query['ApiKey']
-        }
-        elseif ($WebEvent.Data['ApiKey'])
-        {
-            $WebEvent.Data['ApiKey']
-        }
-
-        if (-not $apiKey)
-        {
-            Write-PodeTextResponse -Value "No ApiKey provided" -StatusCode 401
-            return
-        }
-
-        if ($apiKey -ne $env:ApiKey)
-        {
-            Write-PodeTextResponse -Value "Invalid ApiKey provided" -StatusCode 401
-            return
-        }
 
         $beer = if ($WebEvent.Data['name'] -as [uint16])
         {
@@ -82,26 +62,6 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
     }
 
     Add-PodeRoute -Method Put -Path $endpoint -ScriptBlock {
-        $apiKey = if ($WebEvent.Query['ApiKey'])
-        {
-            $WebEvent.Query['ApiKey']
-        }
-        elseif ($WebEvent.Data['ApiKey'])
-        {
-            $WebEvent.Data['ApiKey']
-        }
-
-        if (-not $apiKey)
-        {
-            Write-PodeTextResponse -Value "No ApiKey provided" -StatusCode 401
-            return
-        }
-
-        if ($apiKey -ne $env:ApiKey)
-        {
-            Write-PodeTextResponse -Value "Invalid ApiKey provided" -StatusCode 401
-            return
-        }
 
         if (-not (Get-Beer -BeerId $WebEvent.Data['beerid']))
         {
@@ -129,33 +89,24 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
     }
 
     Add-PodeRoute -Method Delete -Path $endpoint -ScriptBlock {
-        $apiKey = if ($WebEvent.Query['ApiKey'])
-        {
-            $WebEvent.Query['ApiKey']
-        }
-        elseif ($WebEvent.Data['ApiKey'])
-        {
-            $WebEvent.Data['ApiKey']
-        }
 
-        if (-not $apiKey)
+        if (-not (Get-BeerMeasurementInfo -MeasurementId $WebEvent.Data['id']))
         {
-            Write-PodeTextResponse -Value "No ApiKey provided" -StatusCode 401
+            Write-PodeTextResponse -Value "Measurement with id $($WebEvent.Data['id']) not found" -StatusCode 404
             return
         }
 
-        if ($apiKey -ne $env:ApiKey)
+        Remove-BeerMeasurementInfo -MeasurementId $WebEvent.Data['id']
+    }
+
+    Add-PodeRoute -Method Delete -Path "$($endpoint)/:id" -ScriptBlock {
+
+        if (-not (Get-BeerMeasurementInfo -MeasurementId $WebEvent.Parameters['id']))
         {
-            Write-PodeTextResponse -Value "Invalid ApiKey provided" -StatusCode 401
+            Write-PodeTextResponse -Value "Measurement with id $($WebEvent.Parameters['id']) not found" -StatusCode 404
             return
         }
 
-        if (-not (Get-BeerMeasurementInfo -MeasurementId $WebEvent.Data['measurementid']))
-        {
-            Write-PodeTextResponse -Value "Measurement with id $($WebEvent.Data['measurementid']) not found" -StatusCode 404
-            return
-        }
-
-        Remove-BeerMeasurementInfo -MeasurementId $WebEvent.Data['measurementid']
+        Remove-BeerMeasurementInfo -MeasurementId $WebEvent.Parameters['id']
     }
 }
