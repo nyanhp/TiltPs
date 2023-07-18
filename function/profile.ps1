@@ -11,6 +11,9 @@
 # Authenticate with Azure PowerShell using MSI.
 # Remove this if you are not planning on using MSI or Azure PowerShell.
 
+Import-Module -Force Pode
+Import-Module -Force AutoBeerPs
+
 if ($env:MSI_SECRET -and (Get-Module -ListAvailable Az.Accounts))
 {
 	Connect-AzAccount -Identity
