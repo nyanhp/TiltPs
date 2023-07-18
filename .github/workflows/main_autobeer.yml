@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'publish' # set this to the path to your web app project, defaults to the repository root
 
 jobs:
   build-and-deploy:
@@ -18,6 +18,11 @@ jobs:
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v2
+
+      - name: 'Build PowerShell project'
+        shell: pwsh
+        run: |
+          ./build/build.ps1
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
