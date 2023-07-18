@@ -7,9 +7,9 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
 
     Add-PodeRoute -Method Get -Path $endpoint -ScriptBlock {
         $beerParameter = @{}
-        if ($WebEvent.Query['name'] -as [uint16])
+        if ($WebEvent.Query['id'])
         {
-            $beerParameter.BeerId = $WebEvent.Query['name']
+            $beerParameter.BeerId = $WebEvent.Query['id']
         }
         elseif ($WebEvent.Query['name'])
         {
@@ -26,16 +26,6 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
         Write-PodeJsonResponse -Value $beers
     }
 
-    Add-PodeRoute -Method Get -Path "$($endpoint)/:id" -ScriptBlock {
-        $beer = Get-Beer -BeerId $WebEvent.Parameters['id']
-
-        if (-not $beer)
-        {
-            Write-PodeTextResponse -Value 'No beer found' -StatusCode 404
-        }
-        Write-PodeJsonResponse -Value $beer
-    }
-
     Add-PodeRoute -Method Post -Path $endpoint -ScriptBlock {
         $splat = $WebEvent.Data
         $beerId = New-Beer @splat
@@ -48,7 +38,7 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
         Write-PodeJsonResponse -Value (Get-Beer -BeerId $beerId)
     }
 
-    Add-PodeRoute -Method Delete -Path "$($endpoint)/:id" -ScriptBlock {
-        Remove-Beer -BeerId $WebEvent.Parameters['id']
+    Add-PodeRoute -Method Delete -Path $endpoint -ScriptBlock {
+        Remove-Beer -BeerId $WebEvent.Query['id']
     }
 }
