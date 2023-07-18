@@ -1,6 +1,6 @@
 ﻿using module AutoBeerPS
 param($Request, $TriggerMetadata)
-$endpoint = '/api/beer'
+$endpoint = '/beer'
 
 Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
     <##>

@@ -1,5 +1,5 @@
 ﻿param($Request, $TriggerMetadata)
-$endpoint = '/api/measurement'
+$endpoint = '/measurement'
 
 Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
     Import-PodeModule -Name AutoBeerPs
