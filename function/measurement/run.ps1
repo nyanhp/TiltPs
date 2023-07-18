@@ -1,5 +1,6 @@
 ﻿param($Request, $TriggerMetadata)
 $endpoint = '/api/measurement'
+Write-Host $env:PSModulePath
 Import-Module -Force Pode
 Import-Module -Force AutoBeerPs
 
