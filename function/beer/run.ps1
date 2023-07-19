@@ -1,6 +1,6 @@
 ﻿param($Request, $TriggerMetadata)
 $endpoint = '/api/beer'
-Write-Host $env:PSModulePath
+$env:PSModulePath = "$((Resolve-Path -Path ./Modules).Path):$env:PSModulePath"
 
 Import-Module -Force Pode
 Import-Module -Force AutoBeerPs
