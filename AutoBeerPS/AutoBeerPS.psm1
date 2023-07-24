@@ -61,11 +61,10 @@ class Beer
     [uint16] $Color
     [double] $OriginalGravity
     [double] $FinalGravity
-    [Collections.Generic.List[BeerMeasurementInfo]] $Measurements
+    [BeerMeasurementInfo[]] $Measurements
 
     Beer ()
     {
-        $this.Measurements = [Collections.Generic.List[BeerMeasurementInfo]]::new()
         $this | Add-Member -Name OriginalGravityPlato -MemberType ScriptProperty -Value {
             return (668.72 * $this.OriginalGravity) - 463.37 - (205.347 * [Math]::Pow($this.OriginalGravity, 2))
         }
