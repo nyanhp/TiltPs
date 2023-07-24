@@ -8,6 +8,7 @@ $workingDirectory = Split-Path $PSScriptRoot
 Remove-Item -Path "$workingDirectory/publish" -Recurse -Force -ErrorAction Ignore
 $buildFolder = New-Item -Path $workingDirectory -Name 'publish' -ItemType Directory -Force -ErrorAction Stop
 Copy-Item -Path "$workingDirectory/function/*" -Destination $buildFolder.FullName -Recurse -Force
+$null = New-Item -ItemType Directory -Path (Join-Path $workingDirectory 'publish/modules') -Force -ErrorAction Stop
 
 # Process Dependencies
 $requiredModules = (Import-PowerShellDataFile -Path "$workingDirectory/AutoBeerPS/AutoBeerPS.psd1").RequiredModules
