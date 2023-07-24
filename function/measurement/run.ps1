@@ -1,5 +1,11 @@
 ﻿param($Request, $TriggerMetadata)
 $endpoint = '/api/measurement'
+$p = "$((Resolve-Path -Path modules).Path):$env:PSModulePath"
+$env:PSModulePath = "$((Resolve-Path -Path modules).Path):$env:PSModulePath"
+
+try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "Machine") } catch {}
+try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "User") } catch {}
+try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "Process") } catch {}
 Import-Module Pode -Force
 Import-Module AutoBeerPs
 

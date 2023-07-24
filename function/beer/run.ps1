@@ -1,9 +1,18 @@
 ﻿param($Request, $TriggerMetadata)
 $endpoint = '/api/beer'
+$p = "$((Resolve-Path -Path modules).Path):$env:PSModulePath"
+$env:PSModulePath = "$((Resolve-Path -Path modules).Path):$env:PSModulePath"
+
+try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "Machine") } catch {}
+try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "User") } catch {}
+try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "Process") } catch {}
 Import-Module Pode -Force
 Import-Module AutoBeerPs -Force
 
 Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
+    <#
+    
+    #>
     Import-PodeModule -Name AutoBeerPs
 
     Add-PodeRoute -Method Get -Path $endpoint -ScriptBlock {
