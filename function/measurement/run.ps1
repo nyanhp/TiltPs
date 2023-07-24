@@ -37,9 +37,9 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
 
     Add-PodeRoute -Method Post -Path $endpoint -ScriptBlock {
 
-        $beer = if ($WebEvent.Data['name'] -as [uint16])
+        $beer = if ($WebEvent.Data['beerId'])
         {
-            Get-Beer -BeerId $WebEvent.Data['name']
+            Get-Beer -BeerId $WebEvent.Data['beerId']
         }
         else
         {
@@ -48,7 +48,8 @@ Start-PodeServer -Request $TriggerMetadata -ServerlessType AzureFunctions {
 
         if (-not $beer)
         {
-            $id = New-Beer -Name $WebEvent.Data['name'] -Style Altbier -BitternessUnits 30 -Color 200 -OriginalGravity 1.052 -Brewed (Get-Date) -BatchSizeLiters 20
+            $beerName = if ($WebEvent.Data['name']) { $WebEvent.Data['name'] } else { 'Beery McBeerface' }
+            $id = New-Beer -Name $beerName -Style Altbier -BitternessUnits 30 -Color 200 -OriginalGravity 1.052 -Brewed (Get-Date) -BatchSizeLiters 20
             $beer = Get-Beer -BeerId $id
         }
 
