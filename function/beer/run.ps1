@@ -1,9 +1,9 @@
 ﻿param($Request, $TriggerMetadata)
 $endpoint = '/api/beer'
-Write-Host "before $env:PSModulePath"
+Get-ChildItem | FT Name,Length
 $p = "$((Resolve-Path -Path module).Path):$env:PSModulePath"
 $env:PSModulePath = "$((Resolve-Path -Path module).Path):$env:PSModulePath"
-Write-Host "after $env:PSModulePath"
+
 try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "Machine") } catch {}
 try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "User") } catch {}
 try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "Process") } catch {}
