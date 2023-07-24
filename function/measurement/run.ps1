@@ -1,8 +1,8 @@
 ﻿param($Request, $TriggerMetadata)
 $endpoint = '/api/measurement'
 Get-ChildItem | FT Name,Length
-$p = "$((Resolve-Path -Path module).Path):$env:PSModulePath"
-$env:PSModulePath = "$((Resolve-Path -Path module).Path):$env:PSModulePath"
+$p = "$((Resolve-Path -Path modules).Path):$env:PSModulePath"
+$env:PSModulePath = "$((Resolve-Path -Path modules).Path):$env:PSModulePath"
 
 try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "Machine") } catch {}
 try { [System.Environment]::SetEnvironmentVariable("PSModulePath", $p, "User") } catch {}
